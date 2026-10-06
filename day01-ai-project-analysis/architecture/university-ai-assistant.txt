@@ -1,0 +1,55 @@
+University AI Assistant
+
+========================
+INGESTION PIPELINE
+========================
+
+University Regulations
+        |
+        v
+Document Parsing
+        |
+        v
+Text Cleaning
+        |
+        v
+Chunking
+        |
+        v
+Embeddings
+        |
+        v
+Vector Store
+
+
+========================
+QUERY / ACTION PIPELINE
+========================
+
+Student
+   |
+   v
+FastAPI
+   |
+   v
+Validation
+   |
+   v
+Agent
+   |
+   +-------------------+--------------------+
+   |                   |                    |
+   v                   v                    v
+RAG Tool          Exam Schedule Tool    Review Tool
+   |                   |                    |
+   v                   v                    v
+Vector Store       Schedule DB          University API
+   |
+   v
+Relevant Chunks
+   |
+   v
+LLM
+   |
+   v
+Answer
