@@ -1,0 +1,81 @@
+Project:
+E-commerce AI Assistant
+
+Goal:
+Help customers get answers faster, check order status,
+and submit return requests.
+
+Users:
+- Customers
+
+Functional Requirements:
+FR-01: Answer customer questions using approved store data.
+FR-02: Display order status.
+FR-03: Allow customers to submit return requests.
+FR-04: Escalate to human support when the system cannot answer.
+
+Non-Functional Requirements:
+NFR-01: Normal responses should be returned within a few seconds.
+NFR-02: The system should support more than 1000 users.
+NFR-03: Customer data must remain private.
+NFR-04: The system should have high availability.
+
+Constraints:
+C-01: Answers must use approved store data only.
+C-02: A customer must never access another customer's private information.
+
+Data Sources:
+- Product catalog
+- Order database
+- Shipping information
+- Return policy
+- Customer authentication system
+
+User Stories:
+
+US-01:
+As a customer,
+I want to check my order status,
+so that I know when my order will arrive.
+
+US-02:
+As a customer,
+I want to submit a return request,
+so that I can return an eligible product.
+
+Business Rules:
+BR-01: Only the owner of an order may access its details.
+BR-02: Return eligibility depends on the store's return policy.
+
+Acceptance Criteria:
+AC-01: The customer must be authenticated.
+AC-02: The order must belong to the authenticated customer.
+AC-03: The system must display correct order data.
+AC-04: If information is unavailable, the system must return a clear message.
+AC-05: The system must not invent policies or order information.
+
+Out of Scope:
+- Accessing another customer's data
+- Payment processing
+- Automatic refunds
+- Inventory management
+
+Priorities:
+
+Must Have:
+- Order status
+- Return request
+- Data privacy
+- Store-data-only answers
+
+Should Have:
+- Human support escalation
+- Source citations
+
+Could Have:
+- Voice input
+- Customer satisfaction rating
+
+Won't Have for now:
+- Payment processing
+- Automatic refunds
