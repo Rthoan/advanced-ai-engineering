@@ -1,0 +1,150 @@
+Day 03 — Architecture Decision Examples
+
+====================================
+1. TEXT TRANSLATION
+====================================
+
+Requirement:
+Translate English text to Arabic.
+
+Solution:
+LLM
+
+Architecture:
+
+User
+↓
+LLM
+↓
+Translated Text
+
+
+====================================
+2. COMPANY DOCUMENT SEARCH
+====================================
+
+Requirement:
+Answer questions from 20,000 company documents.
+
+Solution:
+RAG
+
+Architecture:
+
+Question
+↓
+Embedding
+↓
+Vector Search
+↓
+Relevant Chunks
+↓
+LLM
+↓
+Answer
+
+
+====================================
+3. ORDER STATUS
+====================================
+
+Requirement:
+Get the current status of an order.
+
+Solution:
+Tool
+
+Architecture:
+
+Order ID
+↓
+Order API
+↓
+Database
+↓
+Order Status
+
+
+====================================
+4. RAG OR ORDER TOOL
+====================================
+
+Requirement:
+The system must decide whether the user is asking about store policies or an order.
+
+Solution:
+Agent
+
+Architecture:
+
+User
+↓
+Agent
+├── RAG Tool
+└── Order Tool
+
+
+====================================
+5. BOOKING + EMAIL
+====================================
+
+Requirement:
+Always send a confirmation email after a successful booking.
+
+Solution:
+Workflow
+
+Architecture:
+
+Booking
+↓
+Success
+↓
+Email Tool
+↓
+Done
+
+
+====================================
+6. RETURN WORKFLOW
+====================================
+
+Requirement:
+Check order
+↓
+Check return policy
+↓
+Check eligibility
+↓
+Create return
+↓
+Retry on failure
+↓
+Request approval when required
+
+Solution:
+LangGraph
+
+Architecture:
+
+Start
+↓
+Order Tool
+↓
+RAG Tool
+↓
+Eligibility Check
+↓
+Eligible?
+├── No → Explain
+└── Yes
+     ↓
+Return Tool
+     ↓
+Failed?
+├── Yes → Retry
+└── No
+     ↓
+Approval Required?
+├── Yes → Human Approval
+└── No → Complete
