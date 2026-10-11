@@ -1,0 +1,191 @@
+Day 04 — Support Assistant Architecture
+
+========================================
+PROJECT
+========================================
+
+AI Support Assistant
+
+Features:
+- Answer company policy questions
+- Show ticket status
+- Create a new ticket
+- Escalate to human support
+- Send confirmation email
+
+
+========================================
+COMPONENTS
+========================================
+
+FastAPI
+Authentication
+Validation
+Agent / Router
+RAG Service
+Ticket Service
+Escalation Service
+Email Service
+LLM Service
+Vector Store
+Ticket Database
+
+
+========================================
+DATA SOURCES
+========================================
+
+Company Policy Documents
+Ticket Database
+User / Authentication Database
+
+
+========================================
+EXTERNAL SERVICES
+========================================
+
+Cloud LLM Provider
+Email Provider
+
+
+========================================
+FLOW A — POLICY QUESTION
+========================================
+
+User
+↓
+FastAPI
+↓
+Authentication
+↓
+Validation
+↓
+Agent
+↓
+RAG Service
+↓
+Vector Store
+↓
+Relevant Policy Chunks
+↓
+LLM Service
+↓
+Answer
+
+
+========================================
+FLOW B — TICKET STATUS
+========================================
+
+User
+↓
+FastAPI
+↓
+Authentication
+↓
+Validation
+↓
+Agent
+↓
+Ticket Service
+↓
+Ticket Database
+↓
+Verify Ticket Owner
+↓
+Ticket Status
+↓
+Response
+
+
+========================================
+FLOW C — CREATE TICKET
+========================================
+
+User
+↓
+FastAPI
+↓
+Authentication
+↓
+Validation
+↓
+Agent
+↓
+Ticket Service
+↓
+Create Ticket
+↓
+Ticket Database
+↓
+Email Service
+↓
+Email Provider
+↓
+Confirmation
+
+
+========================================
+ESCALATION FLOW
+========================================
+
+RAG Service
+↓
+No Reliable Context
+↓
+Agent
+↓
+Escalation Service
+↓
+Human Support
+
+
+========================================
+FAILURE CASES
+========================================
+
+Authentication failed
+→ 401 Unauthorized
+
+Ticket belongs to another user
+→ 403 Forbidden
+
+Ticket not found
+→ 404 Not Found
+
+Ticket Database unavailable
+→ 503 Service Unavailable
+
+RAG finds no reliable context
+→ Do not hallucinate
+→ Escalate to human support
+
+LLM timeout
+→ Retry / Fallback
+
+Email fails after ticket creation
+→ Keep ticket created
+→ Retry email
+→ Log failure
+
+
+========================================
+LLM REQUIRED
+========================================
+
+- Generate answers from RAG context
+- Intent classification when needed
+- Natural-language response generation
+
+
+========================================
+LLM NOT REQUIRED
+========================================
+
+- Authentication
+- Validation
+- Ticket lookup
+- Ownership check
+- Ticket creation
+- Database access
+- Email sending
