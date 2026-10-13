@@ -1,0 +1,163 @@
+Day 05 — RAG Data Pipeline
+
+========================================
+INGESTION PIPELINE
+========================================
+
+Document Upload
+↓
+Validation
+↓
+Generate document_id
+↓
+Calculate checksum
+↓
+Already Processed?
+├── Yes → Skip
+└── No
+     ↓
+Text Extraction
+     ↓
+Cleaning
+     ↓
+Chunking
+     ↓
+Attach Metadata
+     ↓
+Embeddings
+     ↓
+Vector Store
+     ↓
+Mark COMPLETED
+
+
+========================================
+FAILURE FLOW
+========================================
+
+Processing Error
+↓
+Log Error
+↓
+Mark FAILED
+↓
+Continue Other Documents
+↓
+Retry Later
+
+
+========================================
+UPDATE FLOW
+========================================
+
+Updated Document
+↓
+Validate
+↓
+Compare checksum
+↓
+Changed?
+├── No → Skip
+└── Yes
+     ↓
+Delete Old Chunks
+     ↓
+Extract New Text
+     ↓
+Clean
+     ↓
+Chunk
+     ↓
+Metadata
+     ↓
+Embeddings
+     ↓
+Update Vector Store
+
+
+========================================
+DELETE FLOW
+========================================
+
+Delete Document
+↓
+Find Chunks by document_id
+↓
+Delete Vectors
+↓
+Delete Metadata
+
+
+========================================
+QUERY PIPELINE
+========================================
+
+User Question
+↓
+Validation
+↓
+Question Embedding
+↓
+Vector Search
+↓
+Retrieve Top-K Chunks
+↓
+Metadata Filtering
+↓
+Prompt Construction
+↓
+LLM
+↓
+Answer + Sources
+
+
+========================================
+STRUCTURED DATA EXAMPLES
+========================================
+
+Order Database
+↓
+Order Service
+↓
+Structured Query
+↓
+Order Status
+
+Exam Schedule Database
+↓
+Exam Schedule Service
+↓
+Structured Query
+↓
+Schedule Data
+
+Student CSV
+↓
+Validation
+↓
+Cleaning
+↓
+Transformation
+↓
+Student Database
+
+
+========================================
+SCALABLE PROCESSING
+========================================
+
+Upload
+↓
+Create Processing Job
+↓
+Queue
+↓
+Worker
+↓
+Check checksum
+↓
+Process if changed
+↓
+Store Result
+↓
+Mark COMPLETED
