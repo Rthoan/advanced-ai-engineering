@@ -1,0 +1,155 @@
+Day 06 — Production RAG Architecture
+
+
+========================================
+INGESTION PIPELINE
+========================================
+
+Documents
+↓
+Validation
+↓
+Parsing
+↓
+Cleaning
+↓
+Chunking
+↓
+Metadata
+↓
+Embeddings
+↓
+Vector Store
+
+
+========================================
+QUERY PIPELINE
+========================================
+
+User Question
+↓
+Query Processing
+↓
+Query Rewriting
+↓
+Metadata Filtering
+↓
+Hybrid Retrieval
+↓
+Top-N Candidates
+↓
+Reranker
+↓
+Top-K Chunks
+↓
+Context Builder
+↓
+Grounded Prompt
+↓
+LLM
+↓
+Answer
+↓
+Citations
+
+
+========================================
+NO-ANSWER FLOW
+========================================
+
+Retrieval
+↓
+Low Confidence
+↓
+No Reliable Context
+↓
+Do Not Hallucinate
+↓
+Fallback Message
+or
+Human Escalation
+
+
+========================================
+EXAMPLE METADATA
+========================================
+
+document_id = policy_001
+source = phones_policy.pdf
+page = 2
+section = Opened Products
+country = Iraq
+category = phones
+document_type = return_policy
+version = 4
+effective_date = 2026-09-01
+
+
+========================================
+RETRIEVAL FLOW
+========================================
+
+Question
+↓
+Metadata Filter
+↓
+Semantic Search
++
+Keyword Search
+↓
+Top 20 Candidates
+↓
+Reranker
+↓
+Top 5 Chunks
+↓
+Context
+
+
+========================================
+DEBUGGING FLOW
+========================================
+
+Wrong Answer
+↓
+Check Source
+↓
+Check Indexed Data
+↓
+Check Chunk
+↓
+Check Retrieval Rank
+↓
+Check Reranker
+↓
+Check Final Context
+↓
+Check Prompt
+↓
+Check LLM Output
+
+
+========================================
+FAILURE TYPES
+========================================
+
+Ingestion Failure
+Chunking Failure
+Embedding Failure
+Retrieval Failure
+Reranking Failure
+Context Failure
+Prompt Failure
+Generation Failure
+
+
+========================================
+EVALUATION
+========================================
+
+Retrieval Hit Rate
+Faithfulness
+Answer Relevance
+Citation Correctness
+Latency
+Cost
