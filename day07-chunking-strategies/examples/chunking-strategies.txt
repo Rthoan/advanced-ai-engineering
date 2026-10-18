@@ -1,0 +1,166 @@
+Day 07 — Chunking Strategies
+
+
+========================================
+FIXED-SIZE
+========================================
+
+Document
+↓
+500-token Chunk
+↓
+500-token Chunk
+↓
+500-token Chunk
+
+Simple but may break meaning.
+
+
+========================================
+SECTION-BASED
+========================================
+
+Store Handbook
+├── Shipping
+├── Returns
+├── Warranty
+└── Payments
+
+Each section is chunked separately.
+
+If section is large:
+
+Section
+↓
+500-token chunks
+↓
+75-token overlap
+
+
+========================================
+SEMANTIC CHUNKING
+========================================
+
+Text about Returns
+Text about Returns
+Text about Returns
+
+Topic Change
+
+Text about Shipping
+Text about Shipping
+
+Split when semantic topic changes.
+
+
+========================================
+PARENT-CHILD
+========================================
+
+Parent:
+Return Policy
+800 tokens
+
+Children:
+
+Child 1
+200 tokens
+
+Child 2
+200 tokens
+
+Child 3
+200 tokens
+
+Child 4
+200 tokens
+
+Retrieval:
+Search child chunks
+
+Generation:
+Return parent context
+
+
+========================================
+CLAUSE-BASED
+========================================
+
+Contract
+
+Clause 1
+Clause 2
+Clause 3
+Clause 4
+
+Each clause is a logical chunk.
+
+Context Expansion:
+
+Clause 2
+↓
+Retrieve:
+
+Clause 1
+Clause 2
+Clause 3
+
+
+========================================
+FAQ
+========================================
+
+Question:
+How long is the return period?
+
+Answer:
+14 days.
+
+One Q&A pair
+=
+One Chunk
+
+
+========================================
+CHUNKING EVALUATION
+========================================
+
+Config A:
+chunk_size = 300
+overlap = 50
+
+Config B:
+chunk_size = 500
+overlap = 75
+
+Config C:
+child = 200
+parent = 800
+
+Compare:
+
+Retrieval Hit Rate
+MRR
+Context Relevance
+Faithfulness
+Latency
+Cost
+
+
+========================================
+FINAL RULE
+========================================
+
+Best Chunking
+=
+Document Structure
++
+Question Type
++
+Chunk Size
++
+Overlap
++
+Metadata
++
+Evaluation
