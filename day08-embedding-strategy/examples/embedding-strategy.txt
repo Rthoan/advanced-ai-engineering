@@ -1,0 +1,163 @@
+Day 08 — Embedding Strategy
+
+
+========================================
+PROJECT
+========================================
+
+Legal RAG
+
+Languages:
+Arabic + English
+
+Users:
+Mostly Arabic queries
+
+Documents:
+Mostly English contracts
+
+Data:
+Sensitive
+
+Infrastructure:
+Local GPU available
+
+
+========================================
+MODEL REQUIREMENTS
+========================================
+
+Strong Arabic support
+Strong English support
+Strong cross-lingual retrieval
+Good legal vocabulary performance
+Local deployment support
+Low latency
+
+
+========================================
+CANDIDATE MODELS
+========================================
+
+Model A
+Model B
+Model C
+
+
+========================================
+CONTROLLED BENCHMARK
+========================================
+
+Keep fixed:
+
+Chunking Strategy
+Top-K
+Retriever
+Reranker
+Test Dataset
+
+Change only:
+
+Embedding Model
+
+
+========================================
+TEST DATASET
+========================================
+
+Arabic Query
+→ Arabic Document
+
+Arabic Query
+→ English Document
+
+English Query
+→ Arabic Document
+
+English Query
+→ English Document
+
+Include legal terminology:
+
+jurisdiction
+termination
+indemnification
+liability
+force majeure
+
+
+========================================
+METRICS
+========================================
+
+Recall@5
+Hit Rate
+MRR
+Cross-lingual Retrieval
+Query Latency
+Memory
+Index Size
+Cost
+
+
+========================================
+DEPLOYMENT DECISION
+========================================
+
+Sensitive Data
++
+Local GPU Available
+↓
+Local Embedding Model
+
+
+========================================
+VECTOR CONFIGURATION
+========================================
+
+embedding_model = selected_model
+model_version = v1
+dimension = model_dimension
+similarity_metric = cosine
+normalization = model_recommended_setting
+index_version = v1
+
+
+========================================
+MODEL UPDATE
+========================================
+
+New Model
+↓
+Build New Embeddings
+↓
+Create New Index
+↓
+Benchmark
+↓
+Validate
+↓
+Switch Index
+
+Never mix vectors from different embedding models.
+
+
+========================================
+FINAL RULE
+========================================
+
+Best Embedding Strategy
+=
+Languages
++
+Domain
++
+Privacy
++
+Retrieval Quality
++
+Latency
++
+Cost
++
+Deployment Constraints
