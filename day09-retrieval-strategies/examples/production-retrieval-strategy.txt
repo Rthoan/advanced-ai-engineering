@@ -1,0 +1,290 @@
+DAY 09 — PRODUCTION RETRIEVAL STRATEGY
+
+
+========================================
+PROJECT
+========================================
+
+E-commerce RAG Assistant
+
+
+Users:
+Arabic + English
+
+
+Data:
+
+Product Documentation
+Return Policies
+Shipping Policies
+Support Documentation
+
+
+Query Types:
+
+Semantic Questions
+Product SKUs
+Policy IDs
+Follow-up Questions
+Broad Questions
+
+
+========================================
+QUERY CLASSIFICATION
+========================================
+
+Semantic Query
+→ Dense Retrieval
+
+Exact Identifier
+→ Sparse / BM25
+
+Semantic + Identifier
+→ Hybrid Search
+
+Context-dependent Query
+→ Query Rewriting
+
+Broad / Multi-aspect Query
+→ Multi-Query / MMR
+
+
+========================================
+METADATA FILTERING
+========================================
+
+Possible Metadata:
+
+country
+category
+document_type
+language
+version
+status
+customer_id
+
+
+Example:
+
+country = Iraq
+category = phones
+document_type = return_policy
+status = active
+
+
+Security Filter:
+
+customer_id = current_user
+
+
+========================================
+HYBRID RETRIEVAL
+========================================
+
+Query
+↓
+Dense Top 20
++
+BM25 Top 20
+↓
+Merge
+↓
+Deduplicate
+↓
+RRF
+↓
+Candidate Set
+
+
+========================================
+RERANKING
+========================================
+
+Candidate Set
+↓
+Cross-Encoder Reranker
+↓
+Top 8
+
+
+========================================
+DIVERSITY
+========================================
+
+If query is broad:
+
+Top 8
+↓
+MMR
+↓
+Final Top 5
+
+
+========================================
+FINAL PIPELINE
+========================================
+
+User Query
+↓
+Query Classification
+↓
+Query Rewriting if needed
+↓
+Metadata Pre-filter
+↓
+Retriever Selection
+↓
+Dense / Sparse / Hybrid
+↓
+Candidate Retrieval
+↓
+Merge
+↓
+Deduplicate
+↓
+RRF
+↓
+Reranker
+↓
+MMR if required
+↓
+Final Top-K
+↓
+Context Builder
+↓
+LLM
+
+
+========================================
+EXAMPLE 1
+========================================
+
+Query:
+
+ما شروط الإرجاع؟
+
+Type:
+
+Semantic
+
+Strategy:
+
+Dense Retrieval
+
+
+========================================
+EXAMPLE 2
+========================================
+
+Query:
+
+RET-2026-04
+
+Type:
+
+Exact
+
+Strategy:
+
+BM25 / Sparse
+
+
+========================================
+EXAMPLE 3
+========================================
+
+Query:
+
+ما شروط الإرجاع في RET-2026-04؟
+
+Type:
+
+Mixed
+
+Strategy:
+
+Hybrid Search
+
+
+========================================
+EXAMPLE 4
+========================================
+
+Conversation:
+
+User:
+هل يمكن إرجاع الهاتف؟
+
+User:
+وإذا فتحته؟
+
+Strategy:
+
+Query Rewriting
+
+Rewritten Query:
+
+هل يمكن إرجاع الهاتف بعد فتحه؟
+
+
+========================================
+EXAMPLE 5
+========================================
+
+Query:
+
+اشرح سياسة الإرجاع كاملة مع
+المدة والاستثناءات والأجهزة المفتوحة
+وطريقة الاسترداد والإيصال.
+
+Strategy:
+
+Multi-Query
++
+Deduplication
++
+Reranker
++
+MMR
+
+
+========================================
+FAILURE DIAGNOSIS
+========================================
+
+Low Recall
+→ Improve Retrieval
+
+High Recall + Low MRR
+→ Improve Ranking / Reranker
+
+Good Retrieval + Bad Answer
+→ Context / Prompt / Generation
+
+Repeated Evidence
+→ Deduplication / MMR
+
+Exact IDs Missing
+→ Sparse / Hybrid
+
+
+========================================
+EVALUATION
+========================================
+
+Recall@K
+Precision@K
+MRR
+Hit Rate
+Context Relevance
+Duplicate Rate
+Latency
+Cost
+
+
+========================================
+FINAL PRINCIPLE
+========================================
+
+Use the simplest retrieval strategy
+that satisfies the query and project requirements.
