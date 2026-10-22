@@ -1,0 +1,232 @@
+DAY 10 — HYBRID + RERANKING PIPELINE
+
+
+========================================
+PROJECT
+========================================
+
+E-commerce RAG Assistant
+
+
+QUERY:
+
+ما شروط الإرجاع للمنتج SKU-X91؟
+
+
+========================================
+QUERY ANALYSIS
+========================================
+
+Semantic Part:
+
+شروط الإرجاع
+
+
+Exact Part:
+
+SKU-X91
+
+
+Decision:
+
+Hybrid Retrieval
+
+
+========================================
+METADATA FILTER
+========================================
+
+country = Iraq
+category = phones
+status = active
+
+
+========================================
+CANDIDATE GENERATION
+========================================
+
+Dense Top 20
++
+BM25 Top 20
+
+
+Dense:
+→ Semantic Matches
+
+BM25:
+→ Exact Keyword Matches
+
+
+========================================
+FUSION
+========================================
+
+Dense Ranking
++
+BM25 Ranking
+↓
+RRF
+
+
+RRF uses ranking positions
+instead of directly comparing
+raw Dense and BM25 scores.
+
+
+========================================
+UNIQUE CANDIDATES
+========================================
+
+Use:
+
+chunk_id
+document_id
+
+to avoid repeated candidates.
+
+
+========================================
+CANDIDATE K
+========================================
+
+candidate_k = 30
+
+
+Purpose:
+
+Provide high-recall candidates
+to the reranker.
+
+
+========================================
+RERANKING
+========================================
+
+30 Candidates
+↓
+Cross-Encoder
+↓
+Top 8
+
+
+Cross-Encoder Input:
+
+Query + Candidate Chunk
+
+
+Purpose:
+
+Improve relevance ordering.
+
+
+========================================
+DIVERSITY
+========================================
+
+If query is broad:
+
+Top 8
+↓
+MMR
+↓
+Final 5
+
+
+If query is narrow:
+
+Skip MMR
+
+
+========================================
+FINAL K
+========================================
+
+final_k = 5
+
+
+These chunks are sent to:
+
+Context Builder
+↓
+LLM
+
+
+========================================
+FINAL PIPELINE
+========================================
+
+User Query
+↓
+Query Classification
+↓
+Metadata Pre-filter
+↓
+Dense + BM25
+↓
+RRF
+↓
+Unique Candidate Pool
+↓
+Cross-Encoder Reranker
+↓
+MMR if needed
+↓
+Final Top-K
+↓
+Context Builder
+↓
+LLM
+
+
+========================================
+DIAGNOSIS
+========================================
+
+Low Recall
+→ Improve Retrieval
+
+
+High Recall + Low MRR
+→ Improve Reranking
+
+
+MRR Drops After Reranking
+→ Reranker Problem
+
+
+Repeated Relevant Results
+→ MMR / Deduplication
+
+
+High Latency
+→ Profile Each Stage
+
+
+========================================
+EVALUATION
+========================================
+
+Recall@K
+Precision@K
+MRR
+NDCG
+Latency
+Cost
+Duplicate Rate
+
+
+========================================
+FINAL PRINCIPLE
+========================================
+
+Best Production Pipeline
+=
+Best Quality
+
+under acceptable:
+
+Latency
++
+Cost
++
+Complexity
