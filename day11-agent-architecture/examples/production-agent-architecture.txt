@@ -1,0 +1,291 @@
+DAY 11 — PRODUCTION AGENT ARCHITECTURE
+
+
+========================================
+PROJECT
+========================================
+
+Customer Support AI Agent
+
+
+USER REQUEST
+========================================
+
+"Check order 123.
+Read the return policy.
+If the order is eligible,
+create a return."
+
+
+========================================
+TOOLS
+========================================
+
+READ TOOLS
+
+get_order(order_id)
+
+search_policy(query)
+
+
+WRITE TOOLS
+
+create_return(
+    order_id,
+    reason,
+    idempotency_key
+)
+
+
+========================================
+INITIAL STATE
+========================================
+
+order_id = 123
+
+order_data = null
+
+policy_data = null
+
+eligible = unknown
+
+return_created = false
+
+return_id = null
+
+retry_count = 0
+
+step_count = 0
+
+status = running
+
+
+========================================
+AGENT LOOP
+========================================
+
+Decide
+↓
+Act
+↓
+Observe
+↓
+Update State
+↓
+Decide Again
+
+
+========================================
+STEP 1
+========================================
+
+Agent:
+
+Need order information.
+
+Tool:
+
+get_order(123)
+
+
+Observation:
+
+status = delivered
+
+delivered_days_ago = 5
+
+opened = false
+
+
+State Updated.
+
+
+========================================
+STEP 2
+========================================
+
+Agent:
+
+Need return policy.
+
+
+Tool:
+
+search_policy(
+    "return eligibility for unopened electronics"
+)
+
+
+Observation:
+
+Returns allowed within 14 days.
+
+
+========================================
+STEP 3
+========================================
+
+Eligibility:
+
+delivered_days_ago = 5
+
+return_window = 14
+
+opened = false
+
+
+eligible = true
+
+
+========================================
+BUSINESS VALIDATION
+========================================
+
+Agent proposes:
+
+create return
+
+
+Return Service verifies:
+
+Order Exists?
+↓
+Belongs to User?
+↓
+Within Return Window?
+↓
+Product Eligible?
+↓
+Already Returned?
+
+
+========================================
+STEP 4
+========================================
+
+Write Tool:
+
+create_return(
+    order_id = 123,
+    idempotency_key = abc123
+)
+
+
+Observation:
+
+status = success
+
+return_id = RET-900
+
+
+State:
+
+return_created = true
+
+return_id = RET-900
+
+
+========================================
+STOP CONDITION
+========================================
+
+Goal Completed
+↓
+Stop Agent Loop
+
+
+========================================
+FAILURE HANDLING
+========================================
+
+TIMEOUT
+→ Retry with limit
+
+
+ORDER_NOT_FOUND
+→ Non-Retryable
+→ Stop
+
+
+create_return TIMEOUT
+→ Outcome Unknown
+→ Verify Result
+or
+Retry With Same Idempotency Key
+
+
+========================================
+GUARDRAILS
+========================================
+
+Authentication
+↓
+Authorization
+↓
+Business Rules
+↓
+Tool Permissions
+↓
+Human Approval if required
+↓
+Write Action
+
+
+========================================
+SECURITY RULE
+========================================
+
+Agent proposes.
+
+Service enforces.
+
+
+========================================
+STATE / CONTEXT / MEMORY
+========================================
+
+State
+→ Current execution truth
+
+Context
+→ Information visible to LLM now
+
+Memory
+→ Persistent useful information
+
+
+========================================
+PATTERN
+========================================
+
+Short dynamic task:
+
+ReAct
+
+
+Long complex task:
+
+Plan-and-Execute
+
+
+Multiple domains:
+
+Router
+
+
+Separate complex specialties:
+
+Consider Multi-Agent
+
+
+========================================
+FINAL PRINCIPLE
+========================================
+
+LLM for ambiguity.
+
+Code for certainty.
+
+Use the simplest architecture
+that can reliably and safely
+solve the task.
