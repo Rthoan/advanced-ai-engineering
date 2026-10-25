@@ -1,0 +1,239 @@
+DAY 12 — PRODUCTION TOOL CONTRACT
+
+
+========================================
+TOOL
+========================================
+
+create_return
+
+
+========================================
+RESPONSIBILITY
+========================================
+
+Create one authorized return request
+for an eligible order.
+
+This Tool does not:
+
+- Search policies
+- Cancel orders
+- Issue refunds
+- Modify customer accounts
+
+
+========================================
+INPUT
+========================================
+
+order_id:
+required string
+
+quantity:
+required integer
+minimum = 1
+
+reason_code:
+required enum
+
+Allowed values:
+
+DAMAGED
+WRONG_ITEM
+NOT_NEEDED
+OTHER
+
+customer_note:
+optional string
+
+idempotency_key:
+required string
+
+
+========================================
+REQUIRED PERMISSION
+========================================
+
+returns.write
+
+
+========================================
+SCHEMA VALIDATION
+========================================
+
+order_id must not be empty
+
+quantity must be integer
+
+quantity >= 1
+
+reason_code must be valid
+
+unknown fields rejected
+
+
+========================================
+BUSINESS VALIDATION
+========================================
+
+Order exists
+
+User owns order
+
+Order is inside return window
+
+Product is returnable
+
+Quantity does not exceed purchased quantity
+
+Order has not already been returned
+
+
+========================================
+IDEMPOTENCY
+========================================
+
+Same logical request
++
+Same idempotency_key
+→
+Same final effect
+
+
+First call:
+
+created = true
+return_id = RET-900
+
+
+Repeated identical call:
+
+created = false
+existing_return_id = RET-900
+
+
+========================================
+SUCCESS OUTPUT
+========================================
+
+status = success
+
+data:
+
+return_id = RET-900
+order_id = ORD-123
+created_at = timestamp
+
+error = null
+
+
+========================================
+ERROR OUTPUT
+========================================
+
+status = error
+
+data = null
+
+error:
+
+code
+retryable
+reason
+
+
+========================================
+ERROR CODES
+========================================
+
+VALIDATION_ERROR
+
+ORDER_NOT_FOUND
+
+NOT_AUTHORIZED
+
+NOT_ELIGIBLE
+
+ALREADY_RETURNED
+
+SERVICE_TIMEOUT
+
+
+========================================
+WRITE TIMEOUT HANDLING
+========================================
+
+create_return()
+↓
+TIMEOUT
+↓
+Outcome Unknown
+↓
+Verify operation state
+
+OR
+
+Retry with same idempotency_key
+
+
+========================================
+SAFE EXECUTION
+========================================
+
+Validate Input
+↓
+Authenticate
+↓
+Authorize
+↓
+Check Business Rules
+↓
+Check Idempotency
+↓
+Execute
+↓
+Verify Postcondition
+↓
+Return Structured Result
+↓
+Audit
+
+
+========================================
+TESTS
+========================================
+
+Happy Path
+
+Invalid Quantity
+
+Missing Order ID
+
+Invalid Reason Code
+
+Order Not Found
+
+Not Authorized
+
+Not Eligible
+
+Same Idempotency Key Twice
+
+Timeout
+
+Partial Failure
+
+Retry Limit
+
+No Side Effect on Failure
+
+
+========================================
+FINAL PRINCIPLE
+========================================
+
+LLM output can be probabilistic.
+
+Tool boundaries must be deterministic,
+safe, testable, and observable.
