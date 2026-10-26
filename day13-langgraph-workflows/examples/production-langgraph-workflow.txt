@@ -1,0 +1,251 @@
+DAY 13 — PRODUCTION LANGGRAPH WORKFLOW
+
+
+========================================
+STATE
+========================================
+
+request_id
+user_id
+order_id
+
+order_data
+policy_data
+
+return_eligible
+
+approval_required
+approval_status
+
+return_id
+
+retry_count
+max_retries
+
+retryable
+error_code
+
+status
+
+
+========================================
+GRAPH
+========================================
+
+START
+↓
+validate_request
+↓
+load_order
+↓
+result?
+
+├── ORDER_NOT_FOUND
+│   ↓
+│   explain_not_found
+│   ↓
+│   END
+│
+├── SERVICE_TIMEOUT
+│   ↓
+│   retry_router
+│
+└── SUCCESS
+    ↓
+    retrieve_return_policy
+    ↓
+    check_eligibility
+    ↓
+    eligible?
+
+    ├── NO
+    │   ↓
+    │   explain_not_eligible
+    │   ↓
+    │   END
+    │
+    └── YES
+        ↓
+        approval_required?
+
+        ├── NO
+        │   ↓
+        │   create_return
+        │
+        └── YES
+            ↓
+            human_approval
+            ↓
+            CHECKPOINT
+            ↓
+            approved?
+
+            ├── NO
+            │   ↓
+            │   END
+            │
+            └── YES
+                ↓
+                revalidate_order
+                ↓
+                create_return
+
+
+========================================
+WRITE RESULT
+========================================
+
+create_return
+↓
+result?
+
+├── SUCCESS
+│   ↓
+│   build_response
+│   ↓
+│   END
+│
+├── KNOWN_FAILURE
+│   ↓
+│   error_handler
+│   ↓
+│   END
+│
+└── UNKNOWN_OUTCOME
+    ↓
+    verify_return
+    ↓
+    return_exists?
+
+    ├── YES
+    │   ↓
+    │   build_response
+    │   ↓
+    │   END
+    │
+    └── NO
+        ↓
+        safe_retry
+
+
+========================================
+RETRY
+========================================
+
+retryable == true
+
+AND
+
+retry_count < max_retries
+
+→ Retry
+
+Else
+
+→ Fail safely
+
+
+========================================
+HUMAN APPROVAL
+========================================
+
+approval_required = true
+
+approval_status = pending
+
+Pause workflow
+
+Save checkpoint
+
+Human decision
+
+approved?
+├── Yes → Resume
+└── No  → END
+
+
+========================================
+RESUME
+========================================
+
+Load checkpoint
+↓
+Revalidate critical external state
+↓
+Still valid?
+
+├── Yes → Continue
+└── No  → Stop or Re-route
+
+
+========================================
+NODE RESPONSIBILITIES
+========================================
+
+validate_request
+→ validate input
+
+load_order
+→ fetch order
+
+retrieve_return_policy
+→ RAG retrieval
+
+check_eligibility
+→ business eligibility
+
+human_approval
+→ pause for human decision
+
+revalidate_order
+→ refresh external truth
+
+create_return
+→ perform write action
+
+verify_return
+→ resolve unknown write outcome
+
+build_response
+→ final user response
+
+
+========================================
+OBSERVABILITY
+========================================
+
+request_id
+
+node_name
+
+latency
+
+result
+
+error_code
+
+retry_count
+
+selected_route
+
+
+========================================
+FINAL PRINCIPLES
+========================================
+
+Routing decides.
+
+Nodes execute.
+
+State carries truth.
+
+Checkpoint saves workflow state,
+not external reality.
+
+Code for certainty.
+
+LLM for ambiguity.
+
+LangGraph controls the workflow.
+
+Tools perform the work.
