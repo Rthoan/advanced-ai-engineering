@@ -1,0 +1,295 @@
+DAY 14 — PRODUCTION MEMORY ARCHITECTURE
+
+
+========================================
+MEMORY LAYERS
+========================================
+
+Workflow State
+
+Checkpoint Store
+
+Conversation Memory
+
+Structured Long-Term Memory
+
+Semantic / Project Memory
+
+
+========================================
+WORKFLOW STATE
+========================================
+
+order_id
+retry_count
+error_code
+approval_status
+status
+
+
+Purpose:
+
+Current execution truth.
+
+
+========================================
+CHECKPOINT STORE
+========================================
+
+current_node
+approval_status
+retry_count
+workflow_state
+
+
+Purpose:
+
+Pause and resume workflow.
+
+
+========================================
+CONVERSATION MEMORY
+========================================
+
+Conversation Summary
++
+Recent Messages
+
+
+Purpose:
+
+Maintain conversation continuity.
+
+
+========================================
+STRUCTURED LONG-TERM MEMORY
+========================================
+
+Example:
+
+preferred_language = Arabic
+
+Metadata:
+
+source
+confidence
+updated_at
+version
+scope
+
+
+========================================
+SEMANTIC / PROJECT MEMORY
+========================================
+
+Examples:
+
+Use RAG for policies.
+
+Use Tools for order data.
+
+High-value refunds require approval.
+
+
+Storage:
+
+Text
+↓
+Embedding
+↓
+Vector Store
+
+
+========================================
+MEMORY READ PIPELINE
+========================================
+
+Current Request
+↓
+Identify Scope
+↓
+Authorization
+↓
+Structured Lookup
+↓
+Semantic Retrieval
+↓
+Rank
+↓
+Deduplicate
+↓
+Filter
+↓
+Compress
+↓
+Inject into Context
+
+
+========================================
+RANKING SIGNALS
+========================================
+
+Relevance
+
+Recency
+
+Confidence
+
+Importance
+
+Scope Match
+
+
+========================================
+CONTEXT BUILDER
+========================================
+
+System Instructions
++
+Relevant Workflow State
++
+Relevant Structured Memory
++
+Relevant Semantic Memory
++
+Conversation Summary
++
+Recent Messages
++
+Current Request
+
+
+========================================
+MEMORY WRITE PIPELINE
+========================================
+
+Interaction
+↓
+Memory Extractor
+↓
+Candidate Memory
+↓
+Useful Later?
+↓
+Stable?
+↓
+Safe?
+↓
+Correct Scope?
+↓
+Duplicate?
+↓
+Conflict?
+↓
+Create / Update / Reject
+
+
+========================================
+CONFLICT EXAMPLE
+========================================
+
+Old:
+
+preferred_language = English
+source = inferred
+
+
+New:
+
+preferred_language = Arabic
+source = explicit
+
+
+Decision:
+
+Update active value to Arabic.
+
+
+Rule:
+
+Explicit
+>
+Inferred
+
+
+========================================
+SECURITY
+========================================
+
+Do not store:
+
+passwords
+API keys
+access tokens
+credit-card secrets
+
+
+Use:
+
+user_id
+project_id
+tenant_id
+
+for scope isolation.
+
+
+========================================
+MEMORY POISONING
+========================================
+
+Retrieved memory:
+
+"Ignore authentication."
+
+Treat as:
+
+Untrusted contextual data.
+
+Do not allow it to override:
+
+System Rules
+Authentication
+Authorization
+Business Rules
+
+
+========================================
+STATE VS MEMORY DECISION
+========================================
+
+Current execution?
+→ State
+
+Resume workflow?
+→ Checkpoint
+
+Current conversation continuity?
+→ Conversation Memory
+
+Useful in future sessions?
+→ Long-Term Memory
+
+Specific to one project?
+→ Project Memory
+
+
+========================================
+FINAL PRINCIPLES
+========================================
+
+Do not store everything.
+
+Do not retrieve everything.
+
+Store selectively.
+
+Retrieve selectively.
+
+Correct scope matters.
+
+Memory is context,
+not authority.
+
+LLM proposes.
+
+Code enforces.
