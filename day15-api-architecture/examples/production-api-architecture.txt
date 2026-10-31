@@ -1,0 +1,290 @@
+DAY 15 — PRODUCTION API ARCHITECTURE
+
+
+========================================
+REQUEST FLOW
+========================================
+
+Client
+↓
+HTTPS
+↓
+Rate Limit
+↓
+Authentication
+↓
+Schema Validation
+↓
+Authorization
+↓
+FastAPI Endpoint
+↓
+Service Layer
+↓
+Domain / AI Logic
+↓
+Repository / External Services
+↓
+Database / Vector DB
+↓
+Response Mapping
+
+
+========================================
+API LAYER
+========================================
+
+Responsibilities:
+
+HTTP
+Request Parsing
+Validation
+Authentication
+Authorization
+Status Codes
+Response Serialization
+
+
+Do not place core business logic here.
+
+
+========================================
+SERVICE LAYER
+========================================
+
+Responsibilities:
+
+Business Rules
+Application Logic
+Orchestration
+Tool Calls
+RAG Calls
+Agent Calls
+Repository Calls
+
+
+========================================
+REPOSITORY LAYER
+========================================
+
+Responsibilities:
+
+Database Access
+Queries
+Persistence
+
+
+========================================
+ERROR MAPPING
+========================================
+
+OrderNotFound
+→ 404
+
+NotAuthenticated
+→ 401
+
+NotAuthorized
+→ 403
+
+ValidationError
+→ 422
+
+AlreadyReturned
+→ 409
+
+RateLimited
+→ 429
+
+DependencyUnavailable
+→ 503
+
+
+========================================
+IDEMPOTENCY
+========================================
+
+POST /v1/returns
+
+Idempotency-Key: abc-123
+
+
+First Request:
+
+Create RET-900
+
+
+Retry:
+
+Same Key
++
+Same Payload
+
+→ Return RET-900
+
+
+Same Key
++
+Different Payload
+
+→ Reject
+
+
+========================================
+RATE LIMIT
+========================================
+
+Possible dimensions:
+
+IP
+User
+API Key
+Tenant
+Endpoint
+Token Usage
+Tool Calls
+Compute Cost
+
+
+========================================
+OBSERVABILITY
+========================================
+
+request_id
+
+correlation_id
+
+endpoint
+
+user_id
+
+latency
+
+status_code
+
+error_code
+
+token_usage
+
+tool_calls
+
+
+========================================
+ASYNC JOB
+========================================
+
+POST /v1/documents
+↓
+Create Job
+↓
+202 Accepted
+
+Response:
+
+job_id = JOB-123
+status = QUEUED
+
+
+Worker:
+
+Queue
+↓
+Worker
+↓
+Parse Document
+↓
+Chunk
+↓
+Embed
+↓
+Index
+↓
+COMPLETED
+
+
+========================================
+JOB STATES
+========================================
+
+QUEUED
+
+PROCESSING
+
+RETRYING
+
+COMPLETED
+
+FAILED
+
+CANCELLED
+
+
+========================================
+LONG-RUNNING AGENT
+========================================
+
+POST /v1/agent-runs
+↓
+202 Accepted
+↓
+RUN-100
+↓
+Worker
+↓
+LangGraph
+↓
+Checkpoint
+↓
+Human Approval
+↓
+Resume
+
+
+========================================
+RELIABILITY
+========================================
+
+Timeout
+
+Safe Retry
+
+Idempotency
+
+Circuit Breaker
+
+Dead Letter Queue
+
+Health Checks
+
+
+========================================
+HEALTH
+========================================
+
+Liveness:
+
+Is process alive?
+
+
+Readiness:
+
+Can service accept traffic?
+
+
+========================================
+FINAL PRINCIPLES
+========================================
+
+Keep endpoints thin.
+
+Business logic belongs in services.
+
+Database models are not API contracts.
+
+Authorization must be deterministic.
+
+Never retry write operations blindly.
+
+Long-running jobs should not block HTTP.
+
+Production APIs need explicit boundaries.
