@@ -1,0 +1,291 @@
+DAY 16 — PRODUCTION ASYNC AI ARCHITECTURE
+
+
+========================================
+INTERACTIVE REQUEST
+========================================
+
+Client
+↓
+FastAPI
+↓
+Bounded Concurrency
+↓
+Concurrent Reads
+
+├── Vector Search
+├── User Data
+└── Memory Retrieval
+
+↓
+Agent / LLM
+↓
+Streaming Response
+
+
+========================================
+LONG-RUNNING JOB
+========================================
+
+Client
+↓
+POST /v1/documents
+↓
+202 Accepted
+
+job_id = JOB-100
+
+↓
+Queue
+↓
+Document Worker
+↓
+Parse
+↓
+Chunk
+↓
+Embedding Queue
+↓
+Embedding Worker
+↓
+Vector Database
+↓
+COMPLETED
+
+
+========================================
+JOB STATES
+========================================
+
+QUEUED
+
+PROCESSING
+
+RETRYING
+
+WAITING_FOR_APPROVAL
+
+COMPLETED
+
+FAILED
+
+CANCELLED
+
+
+========================================
+RETRY POLICY
+========================================
+
+Retryable Error
+↓
+Backoff
+↓
+Jitter
+↓
+Retry
+
+attempt < max_retries?
+├── YES → Retry
+└── NO  → DLQ
+
+
+========================================
+DEAD LETTER QUEUE
+========================================
+
+Job failed after max retries
+↓
+DLQ
+
+Store:
+
+job_id
+error_code
+attempts
+last_failure
+timestamp
+
+
+========================================
+LONG-RUNNING AGENT
+========================================
+
+POST /v1/agent-runs
+↓
+RUN-123
+↓
+Queue
+↓
+Agent Worker
+↓
+LangGraph
+↓
+Human Approval Required
+↓
+Save Checkpoint
+↓
+Release Worker
+
+
+APPROVAL_GRANTED
+↓
+Resume Queue
+↓
+Worker
+↓
+Load Checkpoint
+↓
+Revalidate External State
+↓
+Continue Graph
+
+
+========================================
+PARTIAL FAILURE
+========================================
+
+create_booking
+✅
+
+charge_payment
+✅
+
+send_email
+❌
+
+
+Correct:
+
+Keep booking result
+Keep payment result
+Retry email only
+
+
+Wrong:
+
+Restart full workflow
+
+
+========================================
+UNKNOWN WRITE OUTCOME
+========================================
+
+charge_payment
+↓
+TIMEOUT
+↓
+Outcome Unknown
+↓
+Verify Payment Status
+
+or
+
+Retry with same idempotency key
+
+
+========================================
+BACKPRESSURE
+========================================
+
+Incoming:
+
+1000 jobs/sec
+
+Capacity:
+
+100 jobs/sec
+
+Protect with:
+
+Rate Limit
+Bounded Queue
+Concurrency Limit
+Worker Scaling
+Load Shedding
+
+
+========================================
+WORKER POOLS
+========================================
+
+Agent Workers
+
+Document Workers
+
+Embedding Workers
+
+Notification Workers
+
+
+Purpose:
+
+Bulkhead isolation
+
+
+========================================
+CONCURRENCY LIMITS
+========================================
+
+Example:
+
+LLM concurrency = 20
+
+DB concurrency = 50
+
+Embedding concurrency = 10
+
+Email concurrency = 100
+
+
+========================================
+OBSERVABILITY
+========================================
+
+queue_depth
+
+oldest_job_age
+
+processing_latency
+
+retry_count
+
+failure_rate
+
+DLQ_size
+
+worker_utilization
+
+dependency_latency
+
+
+========================================
+FINAL PRINCIPLES
+========================================
+
+Independent I/O
+→ Concurrent when safe
+
+Queue
+→ Buffer demand
+
+Backpressure
+→ Protect capacity
+
+Retry
+→ Must be bounded
+
+DLQ
+→ Preserve repeatedly failed jobs
+
+Checkpoint
+→ Durable workflow state
+
+Idempotency
+→ Safe duplicate execution
+
+Compensation
+→ Handle distributed partial failure
+
+More concurrency
+≠
+More throughput
