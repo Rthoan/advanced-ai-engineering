@@ -1,0 +1,306 @@
+DAY 17 — PRODUCTION ERROR RECOVERY
+
+
+========================================
+GENERAL FLOW
+========================================
+
+Operation
+↓
+Failure?
+├── NO
+│   ↓
+│   Continue
+│
+└── YES
+    ↓
+    Classify Error
+    ↓
+    Recovery Policy
+
+
+========================================
+ERROR TAXONOMY
+========================================
+
+VALIDATION_ERROR
+
+AUTHENTICATION_ERROR
+
+AUTHORIZATION_ERROR
+
+BUSINESS_RULE_ERROR
+
+NOT_FOUND
+
+RETRYABLE_TECHNICAL_ERROR
+
+NON_RETRYABLE_TECHNICAL_ERROR
+
+UNKNOWN_OUTCOME
+
+PARTIAL_FAILURE
+
+FATAL_ERROR
+
+
+========================================
+RETRYABLE ERROR
+========================================
+
+SERVICE_TIMEOUT
+↓
+Backoff
+↓
+Jitter
+↓
+Retry
+
+attempt < max_retries?
+├── YES → Retry
+└── NO → Fail / Escalate
+
+
+========================================
+UNKNOWN WRITE OUTCOME
+========================================
+
+issue_refund()
+↓
+TIMEOUT
+↓
+status = UNKNOWN
+↓
+Verify External State
+
+Refund exists?
+├── YES
+│   ↓
+│   Treat as Success
+│
+├── NO
+│   ↓
+│   Safe Retry
+│   using same idempotency protection
+│
+└── UNKNOWN
+    ↓
+    MANUAL_REVIEW
+
+
+========================================
+PARTIAL FAILURE
+========================================
+
+create_order
+✅
+
+charge_payment
+✅
+
+send_email
+❌
+
+
+Correct Recovery:
+
+Keep Order Result
+Keep Payment Result
+Retry Email Only
+
+
+========================================
+CIRCUIT BREAKER
+========================================
+
+CLOSED
+↓
+Calls Allowed
+
+Failure Threshold Reached
+↓
+OPEN
+↓
+Fail Fast
+
+Cooldown
+↓
+HALF-OPEN
+
+Test succeeds
+→ CLOSED
+
+Test fails
+→ OPEN
+
+
+========================================
+GRACEFUL DEGRADATION
+========================================
+
+Retriever
+✅
+
+Reranker
+❌
+
+Fallback:
+
+Use Retriever Ranking
+↓
+degraded_mode = true
+↓
+Log Degradation
+
+
+========================================
+FAIL CLOSED
+========================================
+
+Authorization Service
+↓
+Unavailable
+
+Cannot Verify Permission
+↓
+Do Not Execute Sensitive Action
+
+
+========================================
+ERROR PROPAGATION
+========================================
+
+DatabaseTimeout
+↓
+RepositoryUnavailable
+↓
+ServiceUnavailable
+↓
+HTTP 503
+
+
+External:
+
+SERVICE_UNAVAILABLE
+
+
+Internal:
+
+Database host timeout
+attempt = 2
+latency = 800ms
+
+
+========================================
+RECOVERY OPTIONS
+========================================
+
+Retry
+
+Fallback
+
+Graceful Degradation
+
+Verify
+
+Compensate
+
+Resume
+
+Manual Review
+
+Fail Safe
+
+
+========================================
+COMPENSATION
+========================================
+
+Reserve Inventory
+✅
+
+Charge Payment
+❌
+
+Recovery:
+
+Release Inventory
+
+
+========================================
+MANUAL REVIEW
+========================================
+
+Use when:
+
+High Financial Impact
+
+Unknown Write Outcome
+
+Failed Compensation
+
+Conflicting State
+
+Security Incident
+
+
+State:
+
+status = MANUAL_REVIEW
+
+error_code = PAYMENT_OUTCOME_UNKNOWN
+
+last_successful_step = create_order
+
+failed_step = verify_payment
+
+
+========================================
+OBSERVABILITY
+========================================
+
+request_id
+
+run_id
+
+operation
+
+dependency
+
+attempt
+
+error_code
+
+recovery_action
+
+fallback_used
+
+degraded_mode
+
+final_status
+
+
+========================================
+FINAL PRINCIPLES
+========================================
+
+Classify first.
+
+Retry second.
+
+Unknown
+≠
+Failed.
+
+Do not hide partial success.
+
+Critical uncertainty
+→ Fail Closed.
+
+Recovery is broader than retry.
+
+Every important failure needs
+an explicit recovery path.
+
+Unsafe automated recovery
+→ Escalate.
