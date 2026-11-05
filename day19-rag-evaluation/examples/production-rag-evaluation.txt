@@ -1,0 +1,184 @@
+DAY 19 — PRODUCTION RAG EVALUATION
+
+
+================================
+RETRIEVAL
+================================
+
+Question
+↓
+Retriever
+↓
+Top-K
+
+Measure:
+
+Hit@K
+Recall@K
+Precision@K
+MRR
+NDCG
+
+
+================================
+CONTEXT
+================================
+
+Retrieved Results
+↓
+Reranker
+↓
+Context Builder
+
+Measure:
+
+Context Relevance
+Context Precision
+Context Recall
+
+
+================================
+ANSWER
+================================
+
+Context
+↓
+LLM
+↓
+Answer
+
+Measure:
+
+Groundedness
+Faithfulness
+Relevance
+Completeness
+Correctness
+Citation Accuracy
+
+
+================================
+NO ANSWER
+================================
+
+Insufficient Evidence
+↓
+Abstain
+
+Measure:
+
+Abstention Accuracy
+Over-Refusal
+Hallucination Rate
+
+
+================================
+DATASET
+================================
+
+Golden Set
+
+Dev Set
+
+Holdout Set
+
+Categories:
+
+Easy
+Hard
+Semantic
+Ambiguous
+Multi-hop
+Unsupported
+Adversarial
+Multilingual
+Freshness
+
+
+================================
+EVALUATION
+================================
+
+Objective Checks
+→ Code
+
+Semantic Checks
+→ LLM Judge
+
+Critical / Ambiguous
+→ Human Review
+
+
+================================
+PRODUCTION
+================================
+
+Offline Evaluation
+↓
+Holdout
+↓
+Canary
+↓
+Production
+↓
+Online Monitoring
+
+
+Compare using:
+
+A/B Testing
+
+Shadow Evaluation
+
+
+================================
+DRIFT
+================================
+
+Query Drift
+
+Data Drift
+
+Policy Drift
+
+Model Behavior Drift
+
+
+================================
+CONTINUOUS LOOP
+================================
+
+Production Queries
+↓
+Sample
+↓
+Evaluate
+↓
+Find Failures
+↓
+Human Review
+↓
+Regression Dataset
+↓
+Improve System
+↓
+Re-evaluate
+
+
+================================
+FINAL RULE
+================================
+
+Evaluate:
+
+Retrieval
++
+Context
++
+Answer
++
+Latency
++
+Cost
++
+Production Behavior
