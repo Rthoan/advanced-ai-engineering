@@ -1,0 +1,226 @@
+DAY 18 — PRODUCTION TESTING STRATEGY
+
+
+========================================
+TESTING LAYERS
+========================================
+
+Unit
+↓
+Integration
+↓
+Contract
+↓
+AI Evaluation
+↓
+End-to-End
+
+
+========================================
+UNIT TESTS
+========================================
+
+Validation
+
+Business Rules
+
+Error Classification
+
+Ranking Logic
+
+
+========================================
+INTEGRATION TESTS
+========================================
+
+Service + Database
+
+Retriever + Vector DB
+
+Agent + Tool Registry
+
+Queue + Worker
+
+
+========================================
+CONTRACT TESTS
+========================================
+
+API Schema
+
+Tool Schema
+
+Request / Response Contracts
+
+
+========================================
+TEST DOUBLES
+========================================
+
+Stub
+→ Predefined Response
+
+Fake
+→ Lightweight Implementation
+
+Mock
+→ Verify Interaction
+
+
+========================================
+RAG TESTING
+========================================
+
+Question
+↓
+Retriever
+↓
+Top-K
+
+Measure:
+
+Recall@K
+MRR
+NDCG
+
+Then:
+
+Context
+↓
+LLM
+↓
+Answer
+
+Measure:
+
+Groundedness
+Citation Accuracy
+Unsupported Answer Handling
+
+
+========================================
+AGENT TESTING
+========================================
+
+Input
+↓
+Tool Selection
+↓
+Tool Arguments
+↓
+Execution
+↓
+State
+↓
+Stop
+
+Measure:
+
+Tool Selection Accuracy
+
+Tool Argument Accuracy
+
+Loop Prevention
+
+Retry Behavior
+
+
+========================================
+FAILURE INJECTION
+========================================
+
+Database Timeout
+
+LLM 429
+
+Network Drop
+
+Worker Crash
+
+Duplicate Queue Delivery
+
+Payment Unknown Outcome
+
+
+========================================
+REGRESSION
+========================================
+
+Bug
+↓
+Failing Test
+↓
+Fix
+↓
+Permanent Regression Test
+
+
+========================================
+SECURITY TESTS
+========================================
+
+Unauthorized Access
+
+Cross-Tenant Data Leak
+
+Prompt Injection
+
+Indirect Prompt Injection
+
+Tool Misuse
+
+Secret Leakage
+
+
+========================================
+PERFORMANCE TESTING
+========================================
+
+Load Test
+
+Stress Test
+
+Spike Test
+
+Soak Test
+
+
+Monitor:
+
+p50
+
+p95
+
+p99
+
+Throughput
+
+Error Rate
+
+CPU
+
+Memory
+
+Queue Depth
+
+Cost
+
+
+========================================
+FINAL PRINCIPLES
+========================================
+
+Test the lowest reliable layer.
+
+Do not mock everything.
+
+Test edge cases.
+
+Test failure paths.
+
+Every bug becomes a regression test.
+
+Critical security failures block deployment.
+
+Test how the system breaks,
+not only how it works.
