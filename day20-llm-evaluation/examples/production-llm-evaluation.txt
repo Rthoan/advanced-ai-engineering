@@ -1,0 +1,186 @@
+DAY 20 — PRODUCTION LLM EVALUATION
+
+
+================================
+CORRECTNESS
+================================
+
+Prompt
+↓
+Model
+↓
+Answer
+↓
+Ground Truth / Rubric
+
+
+================================
+INSTRUCTION FOLLOWING
+================================
+
+Required Format
+
+Required Fields
+
+Constraints
+
+Forbidden Content
+
+
+================================
+STRUCTURED OUTPUT
+================================
+
+Valid JSON?
+
+Required Fields?
+
+Correct Types?
+
+Valid Enums?
+
+Valid Ranges?
+
+
+================================
+SAFETY
+================================
+
+Safe Request
+→ Answer
+
+Unsafe Request
+→ Refuse / Safe Completion
+
+
+Measure:
+
+Unsafe Compliance Rate
+
+Over-Refusal Rate
+
+Safe Completion Rate
+
+Critical Violations
+
+
+================================
+ADVERSARIAL TESTING
+================================
+
+Prompt Injection
+
+Indirect Prompt Injection
+
+Jailbreak
+
+Multi-Turn Manipulation
+
+Tool Abuse
+
+Data Leakage
+
+
+================================
+PAIRWISE EVALUATION
+================================
+
+Answer A
+vs
+Answer B
+
+Judge according to rubric.
+
+
+Check:
+
+Position Bias
+
+Verbosity Bias
+
+Self-Preference Bias
+
+
+================================
+JUDGE CALIBRATION
+================================
+
+Human Evaluation
+vs
+LLM Judge
+
+Measure agreement.
+
+
+================================
+REGRESSION
+================================
+
+Model / Prompt Change
+↓
+Run Evaluation Suite
+↓
+Compare Metrics
+↓
+Detect Regressions
+
+
+================================
+LATENCY
+================================
+
+p50
+
+p95
+
+p99
+
+TTFT
+
+Tokens / Second
+
+
+================================
+COST
+================================
+
+Input Tokens
+
+Output Tokens
+
+Cost / Request
+
+Cost / Successful Task
+
+
+================================
+RELEASE
+================================
+
+Guardrails
+↓
+Quality
+↓
+Latency
+↓
+Cost
+
+
+================================
+FINAL PRINCIPLE
+================================
+
+Quality alone
+is not enough.
+
+Evaluate:
+
+Correctness
++
+Instruction Following
++
+Safety
++
+Latency
++
+Cost
