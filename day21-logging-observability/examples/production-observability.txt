@@ -1,0 +1,181 @@
+DAY 21 — PRODUCTION OBSERVABILITY
+
+
+================================
+OBSERVABILITY
+================================
+
+Logs
++
+Metrics
++
+Traces
+
+
+================================
+LOGGING
+================================
+
+Structured Log:
+
+event
+request_id
+correlation_id
+run_id
+component
+error_code
+latency_ms
+status
+
+
+Never log:
+
+Passwords
+API Keys
+Access Tokens
+Sensitive Data
+
+
+================================
+METRICS
+================================
+
+COUNTER
+
+requests_total
+errors_total
+tool_calls_total
+
+
+GAUGE
+
+queue_depth
+active_workers
+
+
+HISTOGRAM
+
+request_latency
+llm_latency
+
+
+================================
+SLI / SLO
+================================
+
+SLI
+→ actual measured value
+
+SLO
+→ desired target
+
+
+================================
+AI METRICS
+================================
+
+LLM Latency
+
+TTFT
+
+Token Usage
+
+Cost
+
+Fallback Rate
+
+Degraded Mode Rate
+
+Empty Retrieval Rate
+
+Agent Steps / Run
+
+Tool Failure Rate
+
+Manual Review Rate
+
+
+================================
+TRACING
+================================
+
+Trace
+→ complete request journey
+
+Span
+→ one operation
+
+
+Trace:
+
+API
+├── Auth
+├── Agent
+│   ├── Retriever
+│   ├── LLM
+│   └── Tool
+└── Response
+
+
+================================
+TRACE ATTRIBUTES
+================================
+
+model_name
+
+prompt_version
+
+input_tokens
+
+output_tokens
+
+latency_ms
+
+retry_count
+
+fallback_used
+
+
+================================
+SAMPLING
+================================
+
+Normal Traces
+→ sample
+
+Error Traces
+→ retain
+
+Slow Traces
+→ retain
+
+Critical Traces
+→ retain
+
+
+================================
+DEBUGGING FLOW
+================================
+
+Metric Alert
+↓
+Open Trace
+↓
+Find Slow / Error Span
+↓
+Inspect Logs
+↓
+Root Cause
+
+
+================================
+FINAL PRINCIPLE
+================================
+
+Observe:
+
+System Health
++
+AI Quality
++
+Cost
