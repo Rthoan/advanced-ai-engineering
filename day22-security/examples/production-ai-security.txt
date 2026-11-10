@@ -1,0 +1,173 @@
+DAY 22 — PRODUCTION AI SECURITY
+
+
+================================
+TRUST MODEL
+================================
+
+User Input
+→ Untrusted
+
+Retrieved Documents
+→ Untrusted
+
+LLM Output
+→ Untrusted Proposal
+
+Trusted Code
+→ Enforces Rules
+
+Database
+→ Source of Truth
+
+
+================================
+PROMPT INJECTION
+================================
+
+User / Document
+↓
+Malicious Instruction
+↓
+Treat As Data
+↓
+Do Not Grant Authority
+
+
+================================
+SECURE TOOL EXECUTION
+================================
+
+Agent Proposes Action
+↓
+Schema Validation
+↓
+Authentication
+↓
+Authorization
+↓
+Object Ownership
+↓
+Business Rules
+↓
+Idempotency
+↓
+Execute
+↓
+Audit
+
+
+================================
+SECURE RAG
+================================
+
+Authenticated User
+↓
+Access Scope
+↓
+Tenant / ACL Filter
+↓
+Authorized Retrieval
+↓
+Rerank
+↓
+Context Builder
+↓
+LLM
+
+
+================================
+DATA SECURITY
+================================
+
+Minimize Data
+
+Redact PII
+
+Mask Sensitive Values
+
+Encrypt In Transit
+
+Encrypt At Rest
+
+
+================================
+SECRETS
+================================
+
+API Keys
+
+Passwords
+
+Access Tokens
+
+Signing Keys
+
+↓
+
+Secret Manager
+
+
+Never Store In:
+
+GitHub
+Logs
+Prompts
+Memory
+Vector DB
+
+
+================================
+IAM
+================================
+
+Authentication
+→ Identity
+
+Authorization
+→ Permission
+
+Object-Level Authorization
+→ Specific Resource Access
+
+
+================================
+LEAST PRIVILEGE
+================================
+
+Agent A
+→ Tool A only
+
+Service B
+→ orders.read only
+
+
+================================
+SERVICE-TO-SERVICE
+================================
+
+Service Identity
+↓
+Authentication
+↓
+Authorization
+↓
+Scoped Access
+
+
+================================
+FAIL CLOSED
+================================
+
+Cannot Verify Permission
+↓
+Do Not Execute Sensitive Action
+
+
+================================
+FINAL PRINCIPLE
+================================
+
+LLM proposes.
+
+Trusted code decides.
