@@ -1,0 +1,151 @@
+DAY 23 — PRODUCTION COST + LATENCY OPTIMIZATION
+
+
+================================
+BASELINE
+================================
+
+Measure:
+
+p50 latency
+p95 latency
+p99 latency
+
+cost/request
+cost/success
+
+input tokens
+output tokens
+
+task success
+quality metrics
+
+
+================================
+BOTTLENECK ANALYSIS
+================================
+
+API
+↓
+Retrieval
+↓
+Reranking
+↓
+LLM
+↓
+Tools
+
+Find the dominant bottleneck first.
+
+
+================================
+LLM OPTIMIZATION
+================================
+
+Remove unnecessary LLM calls.
+
+LLM for ambiguity.
+
+Code for certainty.
+
+
+================================
+CONTEXT OPTIMIZATION
+================================
+
+Retriever Top-N
+↓
+Reranker
+↓
+Final Top-K
+↓
+Deduplicate
+↓
+Context Budget
+↓
+LLM
+
+
+================================
+CACHING
+================================
+
+Request
+↓
+Cache
+
+Hit
+→ Return
+
+Miss
+→ Compute
+→ Store
+→ Return
+
+
+Cache Key Must Include Security Scope.
+
+
+================================
+BATCHING
+================================
+
+Many individual operations
+↓
+Batch
+↓
+One combined execution
+
+
+================================
+MODEL ROUTING
+================================
+
+Simple Request
+→ Small Model
+
+Complex Request
+→ Strong Model
+
+
+================================
+PARALLELISM
+================================
+
+Independent A ─┐
+               ├→ Continue
+Independent B ─┘
+
+
+================================
+GUARDRAILS
+================================
+
+Quality >= Threshold
+
+Safety Violations = 0
+
+Tool Accuracy >= Threshold
+
+
+================================
+FINAL LOOP
+================================
+
+Observe
+↓
+Measure
+↓
+Optimize
+↓
+Evaluate
+↓
+Measure Again
+
+
+================================
+FINAL PRINCIPLE
+================================
+
+Optimize the system,
+not just the model.
