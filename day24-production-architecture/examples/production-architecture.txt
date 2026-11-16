@@ -1,0 +1,157 @@
+DAY 24 — PRODUCTION ARCHITECTURE
+
+
+================================
+REQUEST FLOW
+================================
+
+Client
+↓
+Load Balancer
+↓
+Stateless API
+↓
+Authentication
+↓
+Authorization
+↓
+Application Service
+↓
+Agent / Workflow
+
+
+================================
+RAG
+================================
+
+User Scope
+↓
+ACL Filter
+↓
+Retrieval
+↓
+Rerank
+↓
+Context Builder
+
+
+================================
+TOOLS
+================================
+
+Agent
+↓
+Tool
+↓
+Service
+↓
+Authorization
+↓
+Business Rules
+↓
+Database
+
+
+================================
+LLM GATEWAY
+================================
+
+Agent / RAG / Jobs
+↓
+LLM Gateway
+↓
+Model Routing
+↓
+Provider
+
+
+================================
+ASYNC WORK
+================================
+
+API
+↓
+Queue
+↓
+Worker
+↓
+Result Store
+
+
+================================
+RELIABILITY
+================================
+
+Timeout
+↓
+Retry if Retryable
+↓
+Circuit Breaker
+↓
+Fallback / Degrade / Fail Safe
+
+
+================================
+SCALING
+================================
+
+Load Balancer
+↓
+API-1
+API-2
+API-3
+
+Queue
+↓
+Worker-1
+Worker-2
+Worker-3
+
+
+================================
+DEPLOYMENT
+================================
+
+Canary:
+
+5%
+↓
+20%
+↓
+50%
+↓
+100%
+
+Monitor:
+
+Errors
+Latency
+Groundedness
+Task Success
+Safety
+Cost
+
+
+================================
+DISASTER RECOVERY
+================================
+
+Backups
+↓
+Restore Test
+↓
+RPO / RTO
+↓
+Recovery Procedure
+
+
+================================
+FINAL PRINCIPLE
+================================
+
+Failures should be:
+
+Containable
+Observable
+Recoverable
+Safe
