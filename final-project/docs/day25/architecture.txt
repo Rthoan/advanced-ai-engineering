@@ -1,0 +1,113 @@
+PRODUCTION AI CUSTOMER SUPPORT ASSISTANT
+
+
+================================
+CLIENT
+================================
+
+Customer
+↓
+FastAPI
+
+
+================================
+REQUEST CONTEXT
+================================
+
+Authentication
+↓
+Validation
+↓
+Request ID / Trace ID
+↓
+Router
+
+
+================================
+ROUTER
+================================
+
+Question
+├── Policy / FAQ
+│   → RAG
+│
+├── Order Status
+│   → Order Service
+│
+├── Return Intent
+│   → Return Workflow
+│
+└── Unknown
+    → Fallback
+
+
+================================
+RAG PATH
+================================
+
+Question
+↓
+ACL Filter
+↓
+Retrieval
+↓
+Reranking
+↓
+Top-K
+↓
+Context Builder
+↓
+LLM
+↓
+Answer + Citation
+
+
+================================
+ORDER PATH
+================================
+
+Authenticated User
+↓
+Order Tool
+↓
+Order Service
+↓
+Object-Level Authorization
+↓
+Transactional DB
+↓
+Structured Result
+
+
+================================
+RETURN PATH
+================================
+
+Authenticated User
+↓
+Validate Request
+↓
+Load Order
+↓
+Ownership Check
+↓
+Eligibility Check
+↓
+Idempotency
+↓
+Create Return
+↓
+Audit
+
+
+================================
+CORE RULE
+================================
+
+RAG answers knowledge.
+
+Tools read live state.
+
+Services enforce rules.
+
+LLM handles language and reasoning.
