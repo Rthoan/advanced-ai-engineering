@@ -2,10 +2,13 @@ from fastapi import APIRouter, Request
 
 from app.core.errors import AppError
 from app.models.schemas import ChatRequest, ChatResponse
-from app.services.router import detect_route
+from app.rag.service import RAGService
+from app.services.router import Route, detect_route
 
 
 router = APIRouter(prefix="/v1")
+
+rag_service = RAGService()
 
 
 @router.post("/chat", response_model=ChatResponse)
@@ -21,6 +24,19 @@ async def chat(payload: ChatRequest, request: Request):
         )
 
     route = detect_route(message)
+
+    if route == Route.RAG:
+        result = rag_service.answer(
+            query=message,
+            top_k=3,
+        )
+
+        return ChatResponse(
+            request_id=request.state.request_id,
+            answer=result.answer,
+            route=route.value,
+            citations=result.citations,
+        )
 
     return ChatResponse(
         request_id=request.state.request_id,

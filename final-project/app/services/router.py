@@ -22,7 +22,13 @@ def detect_route(message: str) -> Route:
 
     if any(
         word in text
-        for word in ["policy", "shipping", "faq", "refund"]
+        for word in [
+            "policy",
+            "shipping",
+            "faq",
+            "refund",
+            "return",
+        ]
     ):
         return Route.RAG
 
